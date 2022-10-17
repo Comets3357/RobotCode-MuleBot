@@ -17,12 +17,14 @@ struct RobotData;
 
 struct IntakeData
 {
-    double shooting = 0;
+    // double shooting = 0;
     double xOffset;
     bool toRotation = false;
     bool targetInView = false;
     double yOffset = 0;
     int ballCount = 1;
+    bool shooting = false;
+
 };
 
 enum SetPoint
