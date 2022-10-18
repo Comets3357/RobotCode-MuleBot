@@ -44,6 +44,9 @@ double mCameraAngle = 43;
 double mXOffset = 0;
 double mYOffset = 0;
 
+std::vector<double> mVelocityMap;
+std::vector<double> mPivotPositionMap;
+
 
 };
 
