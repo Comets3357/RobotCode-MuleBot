@@ -7,6 +7,7 @@ void Robot::RobotInit()
     drivebase.RobotInit();
     intake.RobotInit();
     climb.RobotInit();
+    limelight.RobotInit();
 }
 
 void Robot::RobotPeriodic()
@@ -15,6 +16,7 @@ void Robot::RobotPeriodic()
     drivebase.RobotPeriodic(robotData, robotData.drivebaseData, robotData.intakeData);
     intake.RobotPeriodic(robotData, robotData.intakeData);
     climb.RobotPeriodic(robotData, robotData.climbData);
+    limelight.RobotPeriodic(robotData, robotData.limelightData);
 }
 
 void Robot::AutonomousInit()

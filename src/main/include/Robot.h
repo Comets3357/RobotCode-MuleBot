@@ -5,6 +5,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/TimedRobot.h>
 #include "RobotData.h"
+#include "vision/Limelight.h"
 
 //Robot class inherits from TimedRobot
 class Robot : public frc::TimedRobot
@@ -34,4 +35,7 @@ private:
     Drivebase drivebase{};
     Intake intake{};
     Climb climb{};
+
+    // vision
+    Limelight limelight{};
 };
