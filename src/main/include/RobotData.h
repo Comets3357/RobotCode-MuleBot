@@ -11,6 +11,8 @@
 
 #include "subsystems/Climb.h"
 
+#include "vision/Limelight.h"
+
 //could be separated into all separate files for the data *from* each subsystem
 //commented out variables are not in use
 struct RobotData
@@ -21,5 +23,6 @@ struct RobotData
     SubsystemData subsystemData;
     IntakeData intakeData;
     ClimbData climbData;
+    LimelightData limelightData;
     
 };
