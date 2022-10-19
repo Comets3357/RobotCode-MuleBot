@@ -14,10 +14,17 @@ enum Mode {
     mode_climb_manual
 };
 
+enum ShootMode {
+    shootMode_none,
+    shootMode_vision
+};
+
 struct ControlData
 {
+    
     // states:
     Mode mode{mode_teleop_sa};
+    ShootMode shootMode = shootMode_none;
 
     bool shift = false;
 

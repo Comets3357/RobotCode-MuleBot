@@ -53,4 +53,15 @@ void Controller::updateControlData(const RobotData &robotData, const ControllerD
         controlData.lDrive = controllerData.pLYStick;
         controlData.rDrive = controllerData.pRYStick;
     }
+
+    if (controlData.mode != mode_teleop_sa) {
+        controlData.shootMode = shootMode_none;
+        return;
+    }
+
+    if (robotData.controlData.shooting) {
+        if (controlData.shootMode == shootMode_vision) {
+            controlData.shootMode = shootMode_none;
+        } else {controlData.shootMode = shootMode_vision; }
+    }
 }

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Constants.h"
-
+#include <frc/SPI.h>
+#include "AHRS.h"
 
 
 struct RobotData;

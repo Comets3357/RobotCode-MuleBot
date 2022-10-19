@@ -8,8 +8,8 @@ void Gyro::RobotInit()
 
 void Gyro::RobotPeriodic(const RobotData &robotData, GyroData &gyroData)
 {
-    gyroData.yaw = gyro.GetYaw();
-    gyroData.roll = gyro.GetRoll();
+    gyroData.rawYaw = gyro.GetYaw();
+    gyroData.rawRoll = gyro.GetRoll();
     gyroData.angularRate = gyro.GetRawGyroY();
 }
 

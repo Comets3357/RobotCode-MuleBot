@@ -78,11 +78,7 @@ void Drivebase::RobotInit()
     odometryInitialized = false;
 }
 
-void Drivebase::AutonomousInit()
-{
-    timeSinceEnabled.Reset();
-    timeSinceEnabled.Start();
-}
+
 
 void Drivebase::TeleopInit(const RobotData &robotData) {
     if (!odometryInitialized) {

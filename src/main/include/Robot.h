@@ -42,4 +42,6 @@ private:
     Gyro gyro{};
 
     Timer timer{};
+
+    Auton auton{};
 };

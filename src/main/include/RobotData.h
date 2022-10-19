@@ -17,6 +17,8 @@
 
 #include "common/timer.h"
 
+#include "Auton/Auton.h"
+
 //could be separated into all separate files for the data *from* each subsystem
 //commented out variables are not in use
 struct RobotData
@@ -30,5 +32,6 @@ struct RobotData
     LimelightData limelightData;
     GyroData gyroData;
     TimerData timerData;
+    AutonData autonData;
     
 };
