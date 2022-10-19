@@ -6,6 +6,7 @@
 #include <rev/CANSparkMax.h>
 
 #include <frc/TimedRobot.h>
+#include <frc/Timer.h>
 #include <frc/Joystick.h>
 #include <frc/DriverStation.h>
 #include <frc/TimedRobot.h>
@@ -62,7 +63,7 @@ class Drivebase
 public:
     void RobotInit();
     void TeleopInit(const RobotData &robotData);
-    void AutonomousInit(const RobotData &robotData, DrivebaseData &drivebaseData, AutonData &autonData);
+    void AutonomousInit();
     void RobotPeriodic(const RobotData &robotData, DrivebaseData &drivebaseData, AutonData &autonData);
     void TestPeriodic(const RobotData &robotData, DrivebaseData &drivebaseData);
     void DisabledInit();
@@ -128,6 +129,9 @@ private:
     // meters per second to ticks per decisecond converstion factor for 4 in wheels
     const double mpsToTpds = (4.0 / 0.1016) * (1 / (4.0 * M_PI)) * (44.0 / 9.0) * (2048.0) * (0.1);
     const double metersToTicks = (4.0 / 0.1016) * (1 / (4.0 * M_PI)) * (44.0 / 9.0) * (2048.0);
+
+
+    frc::Timer timeSinceEnabled;
 
     // forwards are leads
     rev::CANSparkMax dbL{leftLeadDeviceID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

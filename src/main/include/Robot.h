@@ -38,4 +38,8 @@ private:
 
     // vision
     Limelight limelight{};
+
+    Gyro gyro{};
+
+    Timer timer{};
 };

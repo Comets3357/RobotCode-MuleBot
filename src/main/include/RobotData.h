@@ -13,6 +13,10 @@
 
 #include "vision/Limelight.h"
 
+#include "common/gyro.h"
+
+#include "common/timer.h"
+
 //could be separated into all separate files for the data *from* each subsystem
 //commented out variables are not in use
 struct RobotData
@@ -24,5 +28,7 @@ struct RobotData
     IntakeData intakeData;
     ClimbData climbData;
     LimelightData limelightData;
+    GyroData gyroData;
+    TimerData timerData;
     
 };

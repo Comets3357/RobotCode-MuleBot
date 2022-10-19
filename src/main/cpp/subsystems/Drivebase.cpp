@@ -78,6 +78,12 @@ void Drivebase::RobotInit()
     odometryInitialized = false;
 }
 
+void Drivebase::AutonomousInit()
+{
+    timeSinceEnabled.Reset();
+    timeSinceEnabled.Start();
+}
+
 void Drivebase::TeleopInit(const RobotData &robotData) {
     if (!odometryInitialized) {
     //     frc::Pose2d startPoint = startPointChooser.GetSelected();
@@ -165,7 +171,7 @@ void Drivebase::teleopControl(const RobotData &robotData, DrivebaseData &driveba
     // frc::SmartDashboard::PutNumber("DRIVE MODE", robotData.drivebaseData.driveMode);
     // frc::SmartDashboard::PutNumber("SHOOT MODE", robotData.controlData.shootMode);
     // assign drive mode
-    if (((robotData.controlData.lDrive <= -0.08 || robotData.controlData.lDrive >= 0.08) || (robotData.controlData.rDrive <= -0.08 || robotData.controlData.rDrive >= 0.08))) {
+    if (((robotData.controllerData.pLYStick <= -0.08 || robotData.controllerData.pLYStick >= 0.08) || (robotData.controlData.rDrive <= -0.08 || robotData.controlData.rDrive >= 0.08))) {
         drivebaseData.driveMode = driveMode_joystick;
     }
     /*else if (robotData.controlData.shootMode == shootMode_vision && !robotData.controlData.vectorDrive) {
@@ -291,8 +297,8 @@ void Drivebase::updateOdometry(const RobotData &robotData, DrivebaseData &driveb
     frc::Rotation2d currentRotation{currentRadians};
 
     // NEGATIVE because left motor/encoder should be inverted
-    units::meter_t leftDistance{-dbL.GetSensorCollection().GetIntegratedSensorPosition() / metersToTicks};
-    units::meter_t rightDistance{dbR.GetSensorCollection().GetIntegratedSensorPosition() / metersToTicks};
+    units::meter_t leftDistance{-dbLEncoder.GetPosition() / metersToTicks};
+    units::meter_t rightDistance{dbREncoder.GetPosition() / metersToTicks};
 
     odometry.Update(currentRotation, leftDistance, rightDistance);
 

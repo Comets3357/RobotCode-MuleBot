@@ -25,6 +25,14 @@ struct ControlData
 
     bool shooting = false;
 
+    //driveBase
+    double lDrive;
+    double rDrive;
+    bool turnResponsive;
+    bool dbInverted;
+    double maxStraight = 1;
+    double maxTurn = 0.4;
+
 };
 
 struct ControllerData
