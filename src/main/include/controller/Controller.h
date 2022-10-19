@@ -21,6 +21,10 @@ struct ControlData
 
     bool shift = false;
 
+    bool intake = false;
+
+    bool shooting = false;
+
 };
 
 struct ControllerData
