@@ -64,4 +64,7 @@ void Controller::updateControlData(const RobotData &robotData, const ControllerD
             controlData.shootMode = shootMode_none;
         } else {controlData.shootMode = shootMode_vision; }
     }
+
+    controlData.shooting = robotData.controllerData.sYBtn;
+    controlData.intake = robotData.controllerData.sRTrigger>0.1;
 }

@@ -16,7 +16,7 @@ void Robot::RobotPeriodic()
 {
     subsystem.RobotPeriodic(robotData, robotData.subsystemData);
     drivebase.RobotPeriodic(robotData, robotData.drivebaseData, robotData.autonData);
-    intake.RobotPeriodic(robotData, robotData.intakeData);
+    intake.RobotPeriodic(robotData, robotData.intakeData, robotData.limelightData);
     climb.RobotPeriodic(robotData, robotData.climbData);
     limelight.RobotPeriodic(robotData, robotData.limelightData);
     gyro.RobotPeriodic(robotData, robotData.gyroData);

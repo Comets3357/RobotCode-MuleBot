@@ -40,7 +40,7 @@ class Intake
 {
 public:
     void RobotInit();
-    void RobotPeriodic(const RobotData &robotData, IntakeData &intakeData);  
+    void RobotPeriodic(const RobotData &robotData, IntakeData &intakeData, LimelightData &limelightData);  
     void DisabledPeriodic(const RobotData &robotData, IntakeData &intakeData); 
     void DisabledInit();
 
@@ -68,6 +68,10 @@ private:
 
     bool shooting = false;
 
+
+    //place holder
+    double pivotAngle = 0;
+    double rollerVelocity = 0;
 
 
     rev::CANSparkMax intakePivot = rev::CANSparkMax(intakePivotDeviceID, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
