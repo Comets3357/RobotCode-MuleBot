@@ -48,6 +48,10 @@ public:
 
 private:
 
+
+    double shooterWheelVelocity = 0;
+    double Pivot = 0;
+
     
 
     std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight"); 

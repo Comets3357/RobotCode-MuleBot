@@ -23,11 +23,15 @@ void Intake::RobotInit()
     intakeRoller.BurnFlash();
     //rev::CANSparkMaxLowLevel::EnableExternalUSBControl(true);
 
+    frc::SmartDashboard::PutNumber("pivot", -25);
+    frc::SmartDashboard::PutNumber("shootvelocity", -0.8);
     timer.Start();
 }
 
 void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData)
 {
+    Pivot = frc::SmartDashboard::GetNumber("pivot", -25);
+    shooterWheelVelocity = frc::SmartDashboard::GetNumber("shooterWheelVelocity", -0.8);
     if (!isZeroed && (int)timer.Get() > 2 && intakeAbs.GetOutput() != 0)
     {
         intakePivotEncoder.SetPosition(127.499-202.573*(intakeAbs.GetOutput()));
