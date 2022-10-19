@@ -34,12 +34,12 @@ void Climb::RobotInit()
     climbArmsEncoder.SetPosition(0);
 
     //PIDS
-    climbElevator_pidController.SetP(0.18, 0); //off bar
+    climbElevator_pidController.SetP(0.2, 0); //off bar
     climbElevator_pidController.SetOutputRange(-elevatorSpeed, elevatorSpeed, 0);
     climbElevator_pidController.SetP(1, 1); //on bar temp
     climbElevator_pidController.SetOutputRange(-elevatorSpeed, elevatorSpeed, 1);
 
-    climbArms_pidController.SetP(0.25, 0);
+    climbArms_pidController.SetP(0.27, 0);
     climbArms_pidController.SetOutputRange(-armsSpeed, armsSpeed, 0);
     climbArms_pidController.SetP(0.5, 1);
     climbArms_pidController.SetOutputRange(-armsSpeed, armsSpeed, 1);
@@ -51,6 +51,13 @@ void Climb::RobotInit()
 
 void Climb::RobotPeriodic(const RobotData &robotData, ClimbData &climbData)
 {
+
+    frc::SmartDashboard::PutNumber("encoder Value", climbElevatorEncoder.GetPosition());
+    frc::SmartDashboard::PutNumber("STAGE", stage);
+    angle = gyro.GetRoll();
+    angularRate = gyro.GetRawGyroY();
+    frc::SmartDashboard::PutNumber("ROLL", angle);
+    frc::SmartDashboard::PutNumber("GYROY", angularRate);
     //updates
     updateData(robotData, climbData);
 
@@ -189,7 +196,7 @@ void Climb::runSequence(const RobotData &robotData, ClimbData &climbData)
         if (climbData.bar == targetBar-1)
         {
             if (stage == 6) RunArmsAndElevatorToPos(120,0,65,1,1);
-            else if (stage == 7) WaitUntilGyro(1, 2, -33, 1);
+            else if (stage == 7) WaitUntilGyro(-1, 2, 33, 1);
             else if (stage == 8) RunElevatorToPos(146,1,1);
             else if (stage == 9) ChangeElevatorSpeed(elevatorSpeed,1);
             else if (stage == 10) ChangeArmSpeed(0.7,1);
@@ -204,7 +211,7 @@ void Climb::runSequence(const RobotData &robotData, ClimbData &climbData)
         else 
         {
             if (stage == 6) RunArmsAndElevatorToPos(100,0,165,1,1);
-            else if (stage == 7) WaitUntilGyro(-1, 1, -45, 1);
+            else if (stage == 7) WaitUntilGyro(1, 1, 45, 1);
             else if (stage == 8) RunElevatorToPos(150,1,1);
             else if (stage == 9) RunArmsToPos(100,1,1);
             else if (stage == 10) RunElevatorToPos(110,1,1);
@@ -228,6 +235,8 @@ void Climb::runSequence(const RobotData &robotData, ClimbData &climbData)
         }
     }
 }
+
+
 
 void Climb::RunArmsGyroLower()
 {
@@ -254,12 +263,12 @@ void Climb::wait(int time)
 //Runs the elevator to a specific location, specified in semiAuto
 void Climb::RunElevatorToPos(int position, int stageAdd, int onBar)
 {
-    if (climbElevatorEncoder.GetPosition() > -position + 1 || climbElevatorEncoder.GetPosition() < -position - 1)
+    if (climbElevatorEncoder.GetPosition() > -position + 1.5 || climbElevatorEncoder.GetPosition() < -position - 1.5)
     {
         elevatorRunning = true;
         //only moves when angular rate is low to reduce swinging
         if (onBar==1){
-            if (abs(angularRate) < 70)
+            if (abs(angularRate) < 50)
             {
                 climbElevator_pidController.SetReference(-position, rev::CANSparkMax::ControlType::kPosition, onBar);
             }
@@ -286,7 +295,7 @@ void Climb::RunElevatorToPos(int position, int stageAdd, int onBar)
 void Climb::RunArmsToPos(int position, int stageAdd, int onBar)
 {
 
-    if (climbArmsEncoder.GetPosition() > -position + 1 || climbArmsEncoder.GetPosition() < -position - 1)
+    if (climbArmsEncoder.GetPosition() > -position + 1.5 || climbArmsEncoder.GetPosition() < -position - 1.5)
     {
         armsRunning = true;
         climbArms_pidController.SetReference(-position, rev::CANSparkMax::ControlType::kPosition, onBar);
@@ -318,7 +327,7 @@ void Climb::TopTransfer()
 {
 
     //checks for angle where the bot pulls off bar
-    if (angle < -44 || elevatorRunning)
+    if (angle > 44 || elevatorRunning)
     {
         climbArms.Set(0);
         ChangeElevatorSpeed(0.6, 0);
@@ -367,6 +376,10 @@ void Climb::WaitUntilGyro(int cmp, int arate, float gyroValue, int stageAdd)
             {
                 stage += stageAdd;
             }
+            if (arate == 2)
+            {
+                stage += stageAdd;
+            }
         }
     }
 }
@@ -390,7 +403,7 @@ void Climb::ChangeArmSpeed(float speed, int stageAdd)
 
 void Climb::updateData(const RobotData &robotData, ClimbData &climbData)
 {
-
+    
     // climbData.elevatorAmp = climbElevator.GetOutputCurrent();
     // climbData.armsAmp = climbArms.GetOutputCurrent();
     // climbData.elevatorTemp = climbElevator.GetMotorTemperature();

@@ -12,6 +12,8 @@
 #include <frc/DigitalInput.h>
 #include <frc/DutyCycle.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/SPI.h>
+#include "AHRS.h"
 
 
 struct RobotData;
@@ -112,6 +114,8 @@ private:
     rev::CANSparkMax climbArms = rev::CANSparkMax(elevatorPivotMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::SparkMaxRelativeEncoder climbArmsEncoder = climbArms.GetEncoder();
     rev::SparkMaxPIDController climbArms_pidController = climbArms.GetPIDController();
+
+    AHRS gyro{frc::SPI::Port::kMXP};
 
    
 };
