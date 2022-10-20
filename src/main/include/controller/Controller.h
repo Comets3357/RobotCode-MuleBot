@@ -14,12 +14,36 @@ enum Mode {
     mode_climb_manual
 };
 
+enum ShootMode {
+    shootMode_none,
+    shootMode_vision
+};
+
 struct ControlData
 {
+    
     // states:
     Mode mode{mode_teleop_sa};
+    ShootMode shootMode = shootMode_none;
 
     bool shift = false;
+
+    bool intake = false;
+
+    bool shooting = false;
+
+    bool leftEject = false;
+    bool rightEject = false;
+
+    //driveBase
+    double lDrive;
+    double rDrive;
+    bool turnResponsive;
+    bool dbInverted;
+    double maxStraight = 1;
+    double maxTurn = 0.4;
+
+    bool backShot = false;
 
 };
 
