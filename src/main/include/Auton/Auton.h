@@ -13,6 +13,7 @@
 #include "controller/Controller.h"
 
 
+
 struct RobotData;
 
 struct AutonData
@@ -54,6 +55,8 @@ private:
     void fiveBallC(const RobotData &robotData, ControlData &controlData, ControllerData &controllerData);
 
     void sixBallC(const RobotData &robotData, ControlData &controlData, ControllerData &controllerData);
+
+    double sec = 0;
 
 
     //4 ball

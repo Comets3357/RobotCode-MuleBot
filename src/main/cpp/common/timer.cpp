@@ -16,4 +16,6 @@ void Timer::TeliopInit(const RobotData &robotData, TimerData &timerData)
 void Timer::RobotPeriodic(const RobotData &robotData, TimerData &timerData)
 {
     timerData.secSinceEnabled = (double)timer.Get();
+
+    frc::SmartDashboard::PutNumber("time since enabled", timerData.secSinceEnabled);
 }

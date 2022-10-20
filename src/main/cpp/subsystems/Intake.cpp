@@ -92,6 +92,21 @@ void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData)
             //     intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
             // }
         }
+        else if (robotData.controlData.backShot)
+        {
+            intakePivotPIDController.SetReference(0, rev::CANSparkMax::ControlType::kPosition);
+            SetWheelSpeed(-3700);
+            if (intakeRollerEncoder.GetVelocity() > /*limelightData.flyWheelVelocity*/rollerVelocity - 10 && intakeRollerEncoder.GetVelocity() < /*limelightData.flyWheelVelocity*/rollerVelocity + 30)
+            {
+                //intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1);
+                intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
+            }
+            else
+            {
+                //intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+                intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+            }
+        }
         else if (robotData.controlData.intake)
         {
             intakePivotPIDController.SetReference(-28.8, rev::CANSparkMax::ControlType::kPosition);

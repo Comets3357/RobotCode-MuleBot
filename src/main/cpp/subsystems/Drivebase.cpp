@@ -62,12 +62,12 @@ void Drivebase::RobotInit()
     // dbR.Config_kD(0, 0);
 
     // Atlas 04.07.22 Final tread center drop but not fresh treads
-    dbLPIDController.SetP(0.072601);
-    dbLPIDController.SetP(0.10767);
+    dbLPIDController.SetFF(0.027192);
+    dbLPIDController.SetP(0.38942);
     dbLPIDController.SetD(0);
 
-    dbRPIDController.SetP(0.072601);
-    dbRPIDController.SetP(0.10767);
+    dbRPIDController.SetFF(0.027192);
+    dbRPIDController.SetP(0.38942);
     dbRPIDController.SetD(0);
 
 
@@ -139,9 +139,9 @@ void Drivebase::updateData(const RobotData &robotData, DrivebaseData &drivebaseD
     drivebaseData.currentLDBPos = dbLEncoder.GetPosition();
     drivebaseData.currentRDBPos = dbREncoder.GetPosition();
 
-    drivebaseData.lDriveVel = -dbLEncoder.GetVelocity() / mpsToTpds;
+    drivebaseData.lDriveVel = -dbLEncoder.GetVelocity() / metersToRPM;
     // frc::SmartDashboard::PutNumber("lDriveVel", drivebaseData.lDriveVel);
-    drivebaseData.rDriveVel = -dbREncoder.GetVelocity() / mpsToTpds;
+    drivebaseData.rDriveVel = -dbREncoder.GetVelocity() / metersToRPM;
     // frc::SmartDashboard::PutNumber("rDriveVel", -drivebaseData.rDriveVel);
 
     // WARNING the average calcuation here subtracts for some reason. The values for left and right db velocity act as expected on their own...
@@ -231,10 +231,14 @@ void Drivebase::autonControl(const RobotData &robotData, DrivebaseData &drivebas
 
     // frc::smartDashboard::PutNumber("secSinceEnabled", robotData.timerData.secSinceEnabled);
 
+    
+    frc::SmartDashboard::PutNumber("DRIVE MODE", robotData.drivebaseData.driveMode);
+    frc::SmartDashboard::PutNumber("SHOOT MODE", robotData.controlData.shootMode);
+
     if (drivebaseData.driveMode == driveMode_break)
     {
         if (robotData.controlData.shootMode == shootMode_vision) {
-            // turnInPlaceTeleop(-robotData.limelightData.angleOffset, robotData);
+            turnInPlaceTeleop(-robotData.limelightData.angleOffHorizontal, robotData);
             // frc::smartDashboard::PutNumber("angleOffsetLimelight", robotData.limelightData.angleOffset);
         } else {
             setVelocity(0, 0);
@@ -355,9 +359,10 @@ void Drivebase::setVelocity(double leftVel, double rightVel)
 
     double leftTPDS = leftVel * metersToRPM;
     double rightTPDS = rightVel * metersToRPM;
-
-    dbL.Set(leftTPDS);
-    dbR.Set(rightTPDS);
+    frc::SmartDashboard::PutNumber("left db speed", leftTPDS);
+    frc::SmartDashboard::PutNumber("right db speed", rightTPDS);
+    dbLPIDController.SetReference(leftTPDS, rev::ControlType::kVelocity);
+    dbRPIDController.SetReference(rightTPDS, rev::ControlType::kVelocity);
 }
 
 void Drivebase::zeroEncoders() {

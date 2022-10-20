@@ -40,6 +40,8 @@ struct ControlData
     double maxStraight = 1;
     double maxTurn = 0.4;
 
+    bool backShot = false;
+
 };
 
 struct ControllerData

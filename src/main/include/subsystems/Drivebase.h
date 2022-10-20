@@ -130,7 +130,7 @@ private:
     // const double mpsToTpds = (4.0 / 0.1016) * (1 / (4.0 * M_PI)) * (44.0 / 9.0) * (2048.0) * (0.1);
     // const double metersToTicks = (4.0 / 0.1016) * (1 / (4.0 * M_PI)) * (44.0 / 9.0) * (2048.0);
 
-    const double metersToRPM = 1 / ((1 / 1) * (9 / 44) * (6 * M_PI / 1) * (1 / 39) * (1 / 60));
+    const double metersToRPM = 1.0 / ((1.0 / 1.0) * (9.0 / 44.0) * (6.0 * M_PI / 1.0) * (1.0 / 39.0) * (1.0 / 60.0));
 
 
     frc::Timer timeSinceEnabled;
