@@ -60,26 +60,35 @@ void Intake::SetWheelSpeed(double speed)
 }
 void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData)
 {
-    if (robotData.controlData.mode == mode_teleop_manual || robotData.controlData.mode == mode_teleop_sa)
+    if (!isZeroed && (int)timer.Get() > 2 && intakeAbs.GetOutput() != 0)
     {
-        if (robotData.controlData.mode == mode_teleop_manual)
-        { //updates whether or not the robot is in manual or semiAuto mode
-            Manual(robotData, intakeData);
-        }else{
-            //checks is turret is facing forward
-            SemiAuto(robotData, intakeData);
-        }
-        
-        
-    } 
-    else
+        intakePivotEncoder.SetPosition(-82.7504*(intakeAbs.GetOutput())+53.1228);
+        timer.Stop();
+        isZeroed = true;
+    }
+    if (isZeroed)
     {
-        //sets powers to 0 if the mode is changed out of climb mode
-        intakePivotPIDController.SetReference(0, rev::ControlType::kPosition);
-        intakeRoller.Set(0);
-        intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
-        intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        if (robotData.controlData.mode == mode_teleop_manual || robotData.controlData.mode == mode_teleop_sa)
+        {
+            if (robotData.controlData.mode == mode_teleop_manual)
+            { //updates whether or not the robot is in manual or semiAuto mode
+                Manual(robotData, intakeData);
+            }else{
+                //checks is turret is facing forward
+                SemiAuto(robotData, intakeData);
+            }
+            
+            
+        } 
+        else
+        {
+            //sets powers to 0 if the mode is changed out of climb mode
+            intakePivotPIDController.SetReference(0, rev::ControlType::kPosition);
+            intakeRoller.Set(0);
+            intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+            intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
 
+        }
     }
 }
 
@@ -113,15 +122,7 @@ void Intake::SemiAuto(const RobotData &robotData, IntakeData &intakeData)
     
     
     //rev - 0 abs - 0.6343 rev 28.8 abs - 0.99
-    if (!isZeroed && (int)timer.Get() > 2 && intakeAbs.GetOutput() != 0)
-    {
-        intakePivotEncoder.SetPosition(-82.7504*(intakeAbs.GetOutput())+53.1228);
-        timer.Stop();
-        isZeroed = true;
-    }
-    if (isZeroed)
-    {
-        if (robotData.controlData.leftEject)
+    if (robotData.controlData.leftEject)
         {
             intakePivotPIDController.SetReference(-28.8, rev::CANSparkMax::ControlType::kPosition);
             SetWheelSpeed(-2500);
@@ -139,6 +140,39 @@ void Intake::SemiAuto(const RobotData &robotData, IntakeData &intakeData)
             {
             intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
             intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
+            }
+        }
+        else if (robotData.controllerData.sXBtn)
+        {
+            intakePivotPIDController.SetReference(robotData.limelightData.intakePivotPosition, rev::CANSparkMax::ControlType::kPosition);
+            SetWheelSpeed(robotData.limelightData.flyWheelVelocity);
+        }
+        else if (robotData.controllerData.sYBtn)
+        {
+            if (intakeRollerEncoder.GetVelocity() > robotData.limelightData.flyWheelVelocity - 30 && intakeRollerEncoder.GetVelocity() < robotData.limelightData.flyWheelVelocity + 10)
+            {
+                if (leftBall)
+                {
+                    intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1);
+                    intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.2);
+                }
+                else if (rightBall)
+                {
+                    intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.2);
+                    intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
+                }
+                else
+                {
+                    intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+                    intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+                }
+            }
+            else
+            {
+                intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.2);
+                intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.2);
+                ballInLeft = intakeRollerLeft.GetOutputCurrent() > 10;
+                ballInLeft = intakeRollerRight.GetOutputCurrent() > 10;
             }
         }
         
@@ -245,7 +279,6 @@ void Intake::SemiAuto(const RobotData &robotData, IntakeData &intakeData)
         // {
         //     intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
         // }
-    }
         
         
     intakeData.targetInView = table->GetNumber("tv", 0.0);

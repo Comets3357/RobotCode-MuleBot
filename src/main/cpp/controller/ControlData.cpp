@@ -65,9 +65,9 @@ void Controller::updateControlData(const RobotData &robotData, const ControllerD
         } else {controlData.shootMode = shootMode_vision; }
     }
 
-    controlData.shooting = robotData.controllerData.sYBtn;
-    controlData.backShot = robotData.controllerData.sXBtn;
-    controlData.leftEject = robotData.controllerData.sLTrigger;
-    controlData.rightEject = robotData.controllerData.sRTrigger;
+    controlData.shooting = robotData.controllerData.sBBtn && !controlData.shift;
+    controlData.backShot = robotData.controllerData.sBBtn && controlData.shift;
+    controlData.leftEject = robotData.controllerData.sLCenterBtn;
+    controlData.rightEject = robotData.controllerData.sRCenterBtn;
     controlData.intake = robotData.controllerData.sRTrigger>0.1;
 }
