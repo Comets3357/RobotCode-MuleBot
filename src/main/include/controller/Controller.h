@@ -32,6 +32,9 @@ struct ControlData
 
     bool shooting = false;
 
+    bool leftEject = false;
+    bool rightEject = false;
+
     //driveBase
     double lDrive;
     double rDrive;

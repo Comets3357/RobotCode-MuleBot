@@ -3,7 +3,6 @@
 
 void Robot::RobotInit()
 {
-    subsystem.RobotInit();
     drivebase.RobotInit();
     intake.RobotInit();
     climb.RobotInit();
@@ -15,7 +14,6 @@ void Robot::RobotInit()
 
 void Robot::RobotPeriodic()
 {
-    subsystem.RobotPeriodic(robotData, robotData.subsystemData);
     drivebase.RobotPeriodic(robotData, robotData.drivebaseData, robotData.autonData);
     intake.RobotPeriodic(robotData, robotData.intakeData);
     climb.RobotPeriodic(robotData, robotData.climbData);
@@ -49,7 +47,6 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-    subsystem.DisabledInit();
     drivebase.DisabledInit();
     climb.DisabledInit();
     // auton.DisabledInit();
@@ -57,7 +54,6 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic() 
 {
-    subsystem.DisabledPeriodic(robotData, robotData.subsystemData);
     climb.DisabledPeriodic(robotData, robotData.climbData);
 }
 

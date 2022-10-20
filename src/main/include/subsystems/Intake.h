@@ -46,6 +46,9 @@ public:
 
     void SetWheelSpeed(double speed);
 
+    void Manual(const RobotData &robotData, IntakeData &intakeData);
+    void SemiAuto(const RobotData &robotData, IntakeData &intakeData);
+
 private:
 
     
@@ -72,6 +75,9 @@ private:
     //place holder
     double pivotAngle = 0;
     double rollerVelocity = 0;
+
+    bool leftBall = false;
+    bool rightBall = false;
 
 
     rev::CANSparkMax intakePivot = rev::CANSparkMax(intakePivotDeviceID, rev::CANSparkMaxLowLevel::MotorType::kBrushless);

@@ -66,5 +66,8 @@ void Controller::updateControlData(const RobotData &robotData, const ControllerD
     }
 
     controlData.shooting = robotData.controllerData.sYBtn;
+    controlData.backShot = robotData.controllerData.sXBtn;
+    controlData.leftEject = robotData.controllerData.sLTrigger;
+    controlData.rightEject = robotData.controllerData.sRTrigger;
     controlData.intake = robotData.controllerData.sRTrigger>0.1;
 }
