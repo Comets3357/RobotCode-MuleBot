@@ -293,8 +293,8 @@ void Drivebase::updateOdometry(const RobotData &robotData, DrivebaseData &driveb
     frc::Rotation2d currentRotation{currentRadians};
 
     // NEGATIVE because left motor/encoder should be inverted
-    units::meter_t leftDistance{-dbLEncoder.GetPosition() / metersToTicks};
-    units::meter_t rightDistance{dbREncoder.GetPosition() / metersToTicks};
+    units::meter_t leftDistance{-dbLEncoder.GetPosition() / metersToRPM};
+    units::meter_t rightDistance{dbREncoder.GetPosition() / metersToRPM};
 
     odometry.Update(currentRotation, leftDistance, rightDistance);
 
@@ -353,8 +353,8 @@ void Drivebase::setVelocity(double leftVel, double rightVel)
 {
     // TDPS: ticks per decisecond
 
-    double leftTPDS = leftVel * mpsToTpds;
-    double rightTPDS = rightVel * mpsToTpds;
+    double leftTPDS = leftVel * metersToRPM;
+    double rightTPDS = rightVel * metersToRPM;
 
     dbL.Set(leftTPDS);
     dbR.Set(rightTPDS);
