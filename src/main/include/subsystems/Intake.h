@@ -40,7 +40,7 @@ class Intake
 {
 public:
     void RobotInit();
-    void RobotPeriodic(const RobotData &robotData, IntakeData &intakeData, LimelightData &limelightData);  
+    void RobotPeriodic(const RobotData &robotData, IntakeData &intakeData);  
     void DisabledPeriodic(const RobotData &robotData, IntakeData &intakeData); 
     void DisabledInit();
 

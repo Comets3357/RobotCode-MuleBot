@@ -7,20 +7,24 @@
 void Intake::RobotInit()
 {
     intakePivot.RestoreFactoryDefaults();
-    // intakePivot.SetSoftLimit(rev::CANSparkMax::SoftLimitDirection::kReverse, -74+1);
-    // intakePivot.SetSoftLimit(rev::CANSparkMax::SoftLimitDirection::kForward, 0-1);
-    // intakePivot.EnableSoftLimit(rev::CANSparkMax::SoftLimitDirection::kReverse, true);
-    // intakePivot.EnableSoftLimit(rev::CANSparkMax::SoftLimitDirection::kForward, true);
+    intakePivot.SetSoftLimit(rev::CANSparkMax::SoftLimitDirection::kReverse, -29+1);
+    intakePivot.SetSoftLimit(rev::CANSparkMax::SoftLimitDirection::kForward, 0-1);
+    intakePivot.EnableSoftLimit(rev::CANSparkMax::SoftLimitDirection::kReverse, true);
+    intakePivot.EnableSoftLimit(rev::CANSparkMax::SoftLimitDirection::kForward, true);
+    intakePivotPIDController.SetOutputRange(-0.3, 0.3);
     intakePivot.SetInverted(false);
     intakePivot.SetSmartCurrentLimit(65);
     intakePivot.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     intakePivot.EnableVoltageCompensation(10);
-    intakePivotPIDController.SetP(0.5);
+    intakePivotPIDController.SetP(0.55);
     intakePivot.BurnFlash();
     intakePivotEncoder.SetPosition(0);
     intakeRoller.RestoreFactoryDefaults();
     intakeRoller.SetSmartCurrentLimit(45);
     intakeRoller.EnableVoltageCompensation(10);
+    intakeRollerPIDController.SetP(0.0005);
+    intakeRollerPIDController.SetD(0.006);
+    intakeRollerPIDController.SetFF(0.000221);
     intakeRoller.BurnFlash();
     //rev::CANSparkMaxLowLevel::EnableExternalUSBControl(true);
 
@@ -55,14 +59,19 @@ void Intake::SetWheelSpeed(double speed)
     }
 }
 
-void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData, LimelightData &limelightData)
+void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData)
 {
     pivotAngle = frc::SmartDashboard::GetNumber("pivot", 0);
     rollerVelocity = frc::SmartDashboard::GetNumber("wheel velocity", 0);
     frc::SmartDashboard::PutNumber("pivotPos", intakePivotEncoder.GetPosition());
+    frc::SmartDashboard::PutNumber("ABS", intakeAbs.GetOutput());
+    frc::SmartDashboard::PutNumber("rev", intakePivotEncoder.GetPosition());
+    frc::SmartDashboard::PutNumber("VEL", intakeRollerEncoder.GetVelocity());
+    frc::SmartDashboard::PutNumber("distance", robotData.limelightData.intakePivotPosition);
+    //rev - 0 abs - 0.6343 rev 28.8 abs - 0.99
     if (!isZeroed && (int)timer.Get() > 2 && intakeAbs.GetOutput() != 0)
     {
-        intakePivotEncoder.SetPosition(127.499-202.573*(intakeAbs.GetOutput()));
+        intakePivotEncoder.SetPosition(-82.7504*(intakeAbs.GetOutput())+53.1228);
         timer.Stop();
         isZeroed = true;
     }
@@ -70,25 +79,25 @@ void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData, L
     {
         if (robotData.controlData.shooting)
         {
-            //intakePivotPIDController.SetReference(/*limelightData.intakePivotPosition*/ pivotAngle, rev::CANSparkMax::ControlType::kPosition);
-            SetWheelSpeed(limelightData.flyWheelVelocity);
-            if (intakeRollerEncoder.GetVelocity() > /*limelightData.flyWheelVelocity*/rollerVelocity - 10 && intakeRollerEncoder.GetVelocity() < /*limelightData.flyWheelVelocity*/rollerVelocity + 10)
-            {
-                intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
-                intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.3);
-            }
-            else
-            {
-                intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
-                intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
-            }
+            intakePivotPIDController.SetReference(robotData.limelightData.intakePivotPosition, rev::CANSparkMax::ControlType::kPosition);
+            SetWheelSpeed(robotData.limelightData.flyWheelVelocity);
+            // if (intakeRollerEncoder.GetVelocity() > /*limelightData.flyWheelVelocity*/rollerVelocity - 10 && intakeRollerEncoder.GetVelocity() < /*limelightData.flyWheelVelocity*/rollerVelocity + 10)
+            // {
+            //     intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1);
+            //     intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
+            // }
+            // else
+            // {
+            //     intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+            //     intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+            // }
         }
         else if (robotData.controlData.intake)
         {
-            intakePivotPIDController.SetReference(-10, rev::CANSparkMax::ControlType::kPosition);
-            SetWheelSpeed(-1000);
-            intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.3);
-            intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
+            intakePivotPIDController.SetReference(-28.8, rev::CANSparkMax::ControlType::kPosition);
+            SetWheelSpeed(2500);
+            intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
+            intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.3);
         }
         else
         {
@@ -97,6 +106,26 @@ void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData, L
             intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
             intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
         }
+
+
+        if (robotData.controllerData.sXBtn)
+        {
+            intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1);
+        }
+        else
+        {
+            intakeRollerLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        }
+
+        if (robotData.controllerData.sBBtn)
+        {
+            intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
+        }
+        else
+        {
+            intakeRollerRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        }
+    }
         
         
     intakeData.targetInView = table->GetNumber("tv", 0.0);
@@ -108,7 +137,7 @@ void Intake::RobotPeriodic(const RobotData &robotData, IntakeData &intakeData, L
 
     frc::SmartDashboard::PutNumber("IntakeAbsolute", intakeAbs.GetOutput());
     frc::SmartDashboard::PutNumber("relativeEncoder", intakePivotEncoder.GetPosition());
-    intakePivot.Set(robotData.controllerData.sLYStick*0.2);
+
 
    
 }
