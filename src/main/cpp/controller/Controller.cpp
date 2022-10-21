@@ -131,10 +131,5 @@ void Controller::updateBtnData(ControllerData &controllerData)
 
     //bench test controls
 
-    controllerData.testAButton = getBtnToggled(2, 1);
-    controllerData.testBButton = getBtnToggled(2, 2);
-    controllerData.testXButton = getBtnToggled(2, 3);
-    controllerData.testYButton = getBtnToggled(2, 4);
-    controllerData.testLBumper = getBtnToggled(2, 5);
-    controllerData.testRBumper = getBtnToggled(2, 6);
+    
 }

@@ -1,9 +1,0 @@
-break 0.75
-fiveBallCAlt1
-break 2.5
-turnInPlace 63
-fiveBallCAlt2
-break 0.5
-fiveBallCAlt3
-break 1.75
-turnInPlace -165

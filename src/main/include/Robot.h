@@ -31,11 +31,16 @@ private:
     
 
     // subsystems
-    Subsystem subsystem{};
     Drivebase drivebase{};
     Intake intake{};
     Climb climb{};
 
     // vision
     Limelight limelight{};
+
+    Gyro gyro{};
+
+    Timer timer{};
+
+    Auton auton{};
 };
