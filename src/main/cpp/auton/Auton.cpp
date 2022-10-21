@@ -7,6 +7,7 @@ void Auton::RobotInit(AutonData &autonData) {
 // creates pathGroup vector (list of strings that are interpretted by drivebase)
 void Auton::AutonomousInit(AutonData &autonData)
 {
+    frc::SmartDashboard::PutNumber("ASDASD", 1.0 / ((1.0 / 1.0) * (9.0 / 44.0) * (6.0 * M_PI / 1.0) * (1.0 / 39.0) * (1.0 / 60.0)));
     autonData.autonStep = -1;   // starts at -1 so that the stepper function can advance it to index 0 the first time
 
     // directory to deploy folder on roborio
@@ -98,8 +99,7 @@ void Auton::AutonomousPeriodic(const RobotData &robotData, AutonData &autonData,
 
 void Auton::potato(const RobotData &robotData, ControlData &controlData, ControllerData &controllerData)
 {
-    controlData.intake = false;
-    controlData.shootMode = shootMode_none;
+    
 }
 
 
@@ -131,9 +131,16 @@ void Auton::taxiShoot(const RobotData &robotData, ControlData &controlData, Cont
     {
         controlData.backShot = true;
         controlData.shootMode == shootMode_none;
+        if (sec > 2)
+        {
+             controlData.right = true;
+             controlData.left = true;
+        }
     }
     else 
     {
+        controlData.left = false;
+        controlData.right = false;
         controlData.backShot = false;
         controlData.shootMode == shootMode_none;
     }

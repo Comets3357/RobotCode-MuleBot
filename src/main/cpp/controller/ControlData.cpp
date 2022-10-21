@@ -60,14 +60,60 @@ void Controller::updateControlData(const RobotData &robotData, const ControllerD
     }
 
     if (robotData.controlData.shooting) {
-        if (controlData.shootMode == shootMode_vision) {
-            controlData.shootMode = shootMode_none;
-        } else {controlData.shootMode = shootMode_vision; }
+        controlData.shootMode == shootMode_vision;
+    }
+    else
+    {
+        controlData.shootMode = shootMode_none;
     }
 
-    controlData.shooting = robotData.controllerData.sBBtn && !controlData.shift;
-    controlData.backShot = robotData.controllerData.sBBtn && controlData.shift;
+    if (robotData.controllerData.sYBtnToggled && !controlData.shift)
+    {
+        controlData.shooting = !controlData.shooting;
+        if (controlData.shooting == true)
+        {
+            controlData.backShot = false;
+            controlData.lowShot = false;
+            controlData.backShotAgainst = false;
+        }
+    }
+    if (robotData.controllerData.sYBtnToggled && controlData.shift)
+    {
+        controlData.backShot = !controlData.backShot;
+        if (controlData.backShot == true)
+        {
+            controlData.shooting = false;
+            controlData.lowShot = false;
+            controlData.backShotAgainst = false;
+        }
+    }
+
+    if (robotData.controllerData.sBBtnToggled && controlData.shift)
+    {
+        controlData.lowShot = !controlData.backShot;
+        if (controlData.lowShot == true)
+        {
+            controlData.shooting = false;
+            controlData.backShot = false;
+            controlData.backShotAgainst = false;
+        }
+    }
+
+    if (robotData.controllerData.sXBtnToggled && controlData.shift)
+    {
+        controlData.backShotAgainst = !controlData.backShotAgainst;
+        if (controlData.backShotAgainst == true)
+        {
+            controlData.shooting = false;
+            controlData.lowShot = false;
+            controlData.backShot = false;
+        }
+    }
+    //controlData.backShot = robotData.controllerData.sYBtn && controlData.shift;
     controlData.leftEject = robotData.controllerData.sLCenterBtn;
     controlData.rightEject = robotData.controllerData.sRCenterBtn;
     controlData.intake = robotData.controllerData.sRTrigger>0.1;
+
+    controlData.left = robotData.controllerData.sXBtn && !controlData.shift;
+    controlData.right = robotData.controllerData.sBBtn && ! controlData.shift;
 }

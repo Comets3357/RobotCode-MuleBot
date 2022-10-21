@@ -196,7 +196,7 @@ void Climb::runSequence(const RobotData &robotData, ClimbData &climbData)
         if (climbData.bar == targetBar-1)
         {
             if (stage == 6) RunArmsAndElevatorToPos(120,0,65,1,1);
-            else if (stage == 7) WaitUntilGyro(-1, 2, 33, 1);
+            else if (stage == 7) WaitUntilGyro(-1, 2, 32, 1);
             else if (stage == 8) RunElevatorToPos(146,1,1);
             else if (stage == 9) ChangeElevatorSpeed(elevatorSpeed,1);
             else if (stage == 10) ChangeArmSpeed(0.7,1);
@@ -211,7 +211,7 @@ void Climb::runSequence(const RobotData &robotData, ClimbData &climbData)
         else 
         {
             if (stage == 6) RunArmsAndElevatorToPos(100,0,165,1,1);
-            else if (stage == 7) WaitUntilGyro(1, 1, 45, 1);
+            else if (stage == 7) WaitUntilGyro(1, -1, 42, 1);
             else if (stage == 8) RunElevatorToPos(150,1,1);
             else if (stage == 9) RunArmsToPos(100,1,1);
             else if (stage == 10) RunElevatorToPos(110,1,1);

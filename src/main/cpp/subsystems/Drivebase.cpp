@@ -167,6 +167,10 @@ void Drivebase::teleopControl(const RobotData &robotData, DrivebaseData &driveba
     frc::SmartDashboard::PutNumber("DRIVE MODE", robotData.drivebaseData.driveMode);
     frc::SmartDashboard::PutNumber("SHOOT MODE", robotData.controlData.shootMode);
     // assign drive mode
+    if (robotData.controlData.left || robotData.controlData.right)
+    {
+        drivebaseData.driveMode = driveMode_turnInPlace;
+    }
     if (((robotData.controllerData.pLYStick <= -0.08 || robotData.controllerData.pLYStick >= 0.08) || (robotData.controlData.rDrive <= -0.08 || robotData.controlData.rDrive >= 0.08))) {
         drivebaseData.driveMode = driveMode_joystick;
     }
@@ -182,8 +186,8 @@ void Drivebase::teleopControl(const RobotData &robotData, DrivebaseData &driveba
 
 
     if (drivebaseData.driveMode == driveMode_joystick) {
-        double tempLDrive = robotData.controlData.lDrive;
-        double tempRDrive = robotData.controlData.rDrive;
+        double tempLDrive = robotData.controlData.lDrive*0.6;
+        double tempRDrive = robotData.controlData.rDrive*0.6;
 
         // converts from tank to arcade drive, limits the difference between left and right drive
         double frontBack = robotData.controlData.maxStraight * (tempLDrive + tempRDrive) / 2;

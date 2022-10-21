@@ -44,6 +44,11 @@ struct ControlData
     double maxTurn = 0.4;
 
     bool backShot = false;
+    bool backShotAgainst = false;
+    bool lowShot = false;
+
+    bool left = false;
+    bool right = false;
 
 };
 

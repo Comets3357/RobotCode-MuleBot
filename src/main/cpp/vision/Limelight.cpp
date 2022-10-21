@@ -12,7 +12,7 @@ void Limelight::RobotInit()
     mVelocityMap.push_back(-3000); // 2 feet
     mVelocityMap.push_back(-3000); // 4 feet
     mVelocityMap.push_back(-3100); // 6 feet
-    mVelocityMap.push_back(-3200); // 8 feet
+    mVelocityMap.push_back(-3190); // 8 feet
     mVelocityMap.push_back(-3350); // 10 feet
     mVelocityMap.push_back(-3400); // 12 feet
     mVelocityMap.push_back(-3600); // 14 feet
@@ -62,7 +62,7 @@ void Limelight::RobotPeriodic(const RobotData &robotData, LimelightData &limelig
 
 double Limelight::GetDistanceFromHub()
 {
-    return (mHubHeight - mCameraHeight) / (tan((mCameraAngle + mYOffset) * (3.1415926 / 180.0)));
+    return 5+(mHubHeight - mCameraHeight) / (tan((mCameraAngle + mYOffset) * (3.1415926 / 180.0)));
 }
 
 
@@ -74,15 +74,17 @@ double Limelight::GetFlyWheelVelocity(LimelightData &limelightData)
     double lowerVelocity = 0;
     double upperVelocity = 0;
 
-    if (upper > mVelocityMap.size())
+    if (upper >= mVelocityMap.size())
     {
-        upper = mVelocityMap.back();
+        upper = 9;
     }
 
-    if (lower > mVelocityMap.size())
+    if (lower >= mVelocityMap.size())
     {
-        lower = mVelocityMap.back();
+        lower = 9;
     }
+
+    frc::SmartDashboard::PutNumber("BACK", mVelocityMap.back());
 
     lowerVelocity = mVelocityMap.at(lower);
     upperVelocity = mVelocityMap.at(upper);
@@ -98,14 +100,14 @@ double Limelight::GetIntakePivotPosition(LimelightData &limelightData)
     double lowerVelocity = 0;
     double upperVelocity = 0;
 
-    if (upper > mPivotPositionMap.size())
+    if (upper >= mPivotPositionMap.size())
     {
-        upper = mPivotPositionMap.size();
+        upper = mPivotPositionMap.size()-1;
     }
 
-    if (lower > mPivotPositionMap.size())
+    if (lower >= mPivotPositionMap.size())
     {
-        lower = mPivotPositionMap.size();
+        lower = mPivotPositionMap.size()-1;
     }
 
     lowerVelocity = mPivotPositionMap.at(lower);
